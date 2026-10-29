@@ -1,0 +1,9 @@
+
+Django==6.0.7
+Pillow==12.2.0
+numpy==2.5.0
+opencv-python==4.13.0.92
+torch==2.12.1
+torchvision==0.27.1
+rasterio
+matplotlib==3.11.0

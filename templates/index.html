@@ -1,0 +1,319 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#070a11">
+    <title>TerraVision AI | Satellite Intelligence</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'script.js' %}" defer></script>
+</head>
+<body>
+<div class="app-shell">
+
+    <header class="topbar">
+        <a class="brand" href="#overview">
+            <div class="brand-logo">◉</div>
+            <div>
+                <div class="brand-name">TERRA<span>VISION</span></div>
+                <div class="brand-subtitle">AI SATELLITE INTELLIGENCE</div>
+            </div>
+        </a>
+
+        <div class="topbar-center">
+            <span class="system-indicator"></span>
+            SYSTEM ONLINE <span class="muted">/ TVX-01</span>
+        </div>
+
+        <div class="header-actions">
+            <span class="live-status"><span class="live-dot"></span> LIVE</span>
+            <button id="theme-toggle" class="theme-toggle" type="button"
+                    aria-label="Toggle theme">☼</button>
+        </div>
+    </header>
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-label">MISSION CONTROL</div>
+            <a href="#overview" class="nav-item active"><span>◈</span> Overview</a>
+            <a href="#comparison" class="nav-item"><span>▧</span> Image Analysis</a>
+            <a href="#results" class="nav-item"><span>⌁</span> Change Detection</a>
+
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-label">SYSTEM STATUS</div>
+
+            <div class="system-card">
+                <div class="system-card-title">◉ VISION ENGINE</div>
+                <p><span class="live-dot"></span> Processing ready</p>
+                <div class="system-progress"><span></span></div>
+                <div class="system-card-foot">IMAGE PIPELINE <b>READY</b></div>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="sidebar-orb">⌘</span>
+                <div><strong>TerraVision Core</strong><small>Prototype v1.0</small></div>
+            </div>
+        </aside>
+
+        <main class="main-content" id="overview">
+
+            <section class="page-heading">
+                <div>
+                    <div class="eyebrow"><span></span> GEOSPATIAL ANALYTICS PLATFORM</div>
+                    <h1>See what <span>changed.</span></h1>
+                    <p class="page-description">
+                        Compare satellite imagery across time. Detect visual differences
+                        and highlight potentially changed regions.
+                    </p>
+                </div>
+                <div class="mission-badge">
+                    <span class="mission-icon">⌖</span>
+                    <div><small>MISSION STATUS</small><strong>AWAITING INPUT</strong></div>
+                </div>
+            </section>
+
+            <section class="metrics-grid">
+                <article class="metric-card">
+                    <div class="metric-top"><span>ANALYSIS ENGINE</span><b>◈</b></div>
+                    <div class="metric-value">READY</div>
+                    <div class="metric-foot"><span class="live-dot"></span> Image pipeline available</div>
+                </article>
+                <article class="metric-card">
+                    <div class="metric-top"><span>INPUT CHANNELS</span><b class="purple">▧</b></div>
+                    <div class="metric-value">02 <small>IMAGES</small></div>
+                    <div class="metric-foot">Before + After comparison</div>
+                </article>
+                <article class="metric-card">
+                    <div class="metric-top"><span>DETECTION MODE</span><b class="green">⌁</b></div>
+                    <div class="metric-value smaller">PIXEL DIFF</div>
+                    <div class="metric-foot">Visual difference thresholding</div>
+                </article>
+            </section>
+
+            <section class="workspace-grid" id="comparison">
+                <div class="panel upload-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <div class="panel-kicker">01 / INPUT DATA</div>
+                            <h2>Image Comparison</h2>
+                            <p>Upload two images of the same area from different times.</p>
+                        </div>
+                        <span class="heading-icon">⊞</span>
+                    </div>
+
+                    {% if error %}
+                    <div class="alert" role="alert">{{ error }}</div>
+                    {% endif %}
+
+                    <form id="compare-form" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="upload-grid">
+                            <div class="upload-card">
+                                <div class="upload-title">
+                                    <span class="step step-blue">A</span>
+                                    <div><h3>Before Image</h3><small>BASELINE REFERENCE</small></div>
+                                </div>
+
+                                <label class="upload-box" for="before-image">
+                                    <div class="upload-content">
+                                        <span class="upload-symbol">↑</span>
+                                        <strong>Drop image here</strong>
+                                        <span>or <u>browse files</u></span>
+                                        <small>JPG · PNG · TIFF · WEBP</small>
+                                    </div>
+                                    <input id="before-image" type="file" name="before_image"
+                                           accept=".jpg,.jpeg,.png,.webp,.tif,.tiff"
+                                           required>
+                                </label>
+                                <p id="before-filename" class="file-name">No file selected</p>
+                                <img id="before-preview" class="preview-image"
+                                     alt="Before image preview" hidden>
+                            </div>
+
+                            <div class="upload-card">
+                                <div class="upload-title">
+                                    <span class="step step-cyan">B</span>
+                                    <div><h3>After Image</h3><small>COMPARISON TARGET</small></div>
+                                </div>
+
+                                <label class="upload-box upload-box-after" for="after-image">
+                                    <div class="upload-content">
+                                        <span class="upload-symbol">↑</span>
+                                        <strong>Drop image here</strong>
+                                        <span>or <u>browse files</u></span>
+                                        <small>JPG · PNG · TIFF · WEBP</small>
+                                    </div>
+                                    <input id="after-image" type="file" name="after_image"
+                                           accept=".jpg,.jpeg,.png,.webp,.tif,.tiff"
+                                           required>
+                                </label>
+                                <p id="after-filename" class="file-name">No file selected</p>
+                                <img id="after-preview" class="preview-image"
+                                     alt="After image preview" hidden>
+                            </div>
+                        </div>
+
+                        <div class="upload-note">
+                            ⓘ Use images covering the same area with a similar view
+                            for a more meaningful comparison.
+                        </div>
+
+                        <button id="compare-button" class="button button-primary"
+                                type="submit">
+                            <span class="button-loader"></span>
+                            <span class="button-label">RUN CHANGE DETECTION</span>
+                            <span class="button-arrow">↗</span>
+                        </button>
+                    </form>
+                </div>
+
+                <aside class="panel protocol-panel">
+                    <div class="panel-heading">
+                        <div><div class="panel-kicker">02 / PROCESS</div><h2>Analysis Protocol</h2></div>
+                        <span class="ready-badge"><span class="live-dot"></span> READY</span>
+                    </div>
+
+                    <div class="protocol-list">
+                        <div class="protocol-step">
+                            <span class="protocol-number">01</span>
+                            <div><strong>Image Ingestion</strong><p>Load and validate both images.</p></div>
+                            <span class="check">✓</span>
+                        </div>
+                        <div class="protocol-step">
+                            <span class="protocol-number">02</span>
+                            <div><strong>Image Normalization</strong><p>Resize to a common resolution.</p></div>
+                            <span class="check">✓</span>
+                        </div>
+                        <div class="protocol-step">
+                            <span class="protocol-number">03</span>
+                            <div><strong>Pixel Difference</strong><p>Calculate visual differences.</p></div>
+                            <span class="check">◌</span>
+                        </div>
+                        <div class="protocol-step">
+                            <span class="protocol-number">04</span>
+                            <div><strong>Change Overlay</strong><p>Highlight flagged pixels in red.</p></div>
+                            <span class="check">◌</span>
+                        </div>
+                    </div>
+
+                    <div class="protocol-callout">
+                        <span>✳</span>
+                        <div><strong>Processing note</strong>
+                            <p>This prototype detects pixel differences. It does not
+                            yet classify land use or verify real-world changes.</p>
+                        </div>
+                    </div>
+
+                    <div class="terminal-box">
+                        <div class="terminal-heading">TERMINAL <span>● ● ●</span></div>
+                        <p>&gt; System initialized</p>
+                        <p>&gt; Image pipeline standing by</p>
+                        <p>&gt; Awaiting input <span class="cursor">_</span></p>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="panel results-panel" id="results">
+                <div class="panel-heading results-heading">
+                    <div>
+                        <div class="panel-kicker">03 / OUTPUT</div>
+                        <h2>Intelligence Report</h2>
+                        <p>Processed images and detected visual differences.</p>
+                    </div>
+                    {% if result_url %}
+                    <span class="ready-badge"><span class="live-dot"></span> ANALYSIS COMPLETE</span>
+                    {% else %}
+                    <span class="waiting-badge">AWAITING ANALYSIS</span>
+                    {% endif %}
+                </div>
+
+                {% if result_url %}
+                <div class="result-metric">
+                    <div class="result-metric-icon">⌁</div>
+                    <div>
+                        <small>PIXELS FLAGGED AS DIFFERENT</small>
+                        <div class="result-metric-value">{{ pixel_difference }}<span>%</span></div>
+                        <p>Share of pixels exceeding the configured threshold.</p>
+                    </div>
+                </div>
+
+                <div class="image-results">
+                    <article class="result-image-card">
+                        <div class="result-image-heading"><span class="dot blue-dot"></span> BEFORE IMAGE</div>
+                        <img class="result-image" src="{{ before_url }}" alt="Before image">
+                    </article>
+                    <article class="result-image-card">
+                        <div class="result-image-heading"><span class="dot green-dot"></span> AFTER IMAGE</div>
+                        <img class="result-image" src="{{ after_url }}" alt="After image">
+                    </article>
+                    <article class="result-image-card result-image-featured">
+                        <div class="result-image-heading"><span class="dot red-dot"></span> DETECTED DIFFERENCES</div>
+                        <img class="result-image" src="{{ result_url }}" alt="Detected pixel differences">
+                    </article>
+                </div>
+
+                <div class="result-controls">
+                    <button type="button" id="overlay-toggle" class="interactive-btn active"
+                            aria-pressed="true">
+                        <span class="control-indicator"></span> Change Overlay
+                    </button>
+                    <button type="button" id="scan-toggle" class="interactive-btn"
+                            aria-pressed="false">
+                        <span>⌖</span> Scan Animation
+                    </button>
+                    <button type="button" id="compare-toggle" class="interactive-btn"
+                            aria-expanded="false">
+                        <span>⇆</span> Compare Before / After
+                    </button>
+                    <button type="button" id="reset-view" class="interactive-btn">
+                        ↺ Reset View
+                    </button>
+                </div>
+
+                <div id="comparison-view" class="comparison-view" hidden>
+                    <div class="comparison-toolbar">
+                        <span>BEFORE / AFTER VIEW</span>
+                        <span>DRAG THE SLIDER TO COMPARE</span>
+                    </div>
+                    <div class="comparison-stage">
+                        <img src="{{ after_url }}" alt="After image" class="comparison-base">
+                        <div class="comparison-after-clip">
+                            <img src="{{ before_url }}" alt="Before image" class="comparison-before">
+                        </div>
+                        <div class="comparison-divider"></div>
+                        <input type="range" id="comparison-slider" min="0" max="100"
+                               value="50" aria-label="Compare before and after images">
+                        <span class="comparison-label label-before">BEFORE</span>
+                        <span class="comparison-label label-after">AFTER</span>
+                    </div>
+                </div>
+
+                <div class="result-legend">
+                    <span class="legend-color"></span>
+                    Red overlay = pixels flagged by the difference threshold,
+                    not confirmed real-world changes.
+                </div>
+                {% else %}
+                <div class="empty-results">
+                    <div class="empty-scan"><span>⌖</span></div>
+                    <h3>No analysis data yet</h3>
+                    <p>Upload a Before image and an After image, then run change
+                    detection to generate your visual report.</p>
+                    <a href="#comparison" class="button button-secondary">OPEN IMAGE WORKSPACE ↗</a>
+                </div>
+                {% endif %}
+            </section>
+
+            <footer class="footer">
+                <div class="footer-brand">◈ TERRAVISION AI</div>
+                <span>GEOSPATIAL IMAGE ANALYSIS · PROTOTYPE</span>
+                <a href="#overview">BACK TO TOP ↑</a>
+            </footer>
+        </main>
+    </div>
+</div>
+</body>
+</html>
